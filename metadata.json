@@ -1,0 +1,6 @@
+{
+  "name": "Text Neck Posture IoT Builder",
+  "description": "An interactive step-by-step IoT builder, wiring guide, and code simulator for creating an ESP32 & MPU6050 Text Neck Syndrome Prevention Device, featuring an AI Troubleshooting assistant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
