@@ -144,7 +144,7 @@ export default function SimulatorTab() {
       <div className="lg:col-span-8 flex flex-col space-y-4">
         {/* Animated head & spine visualizer canvas */}
         <div 
-          className={`relative bg-gradient-to-b from-slate-900 to-slate-950 rounded-3xl p-6 overflow-hidden border border-slate-800 transition-all duration-300 h-[380px] flex flex-col justify-between ${
+          className={`relative bg-gradient-to-b from-slate-900 to-slate-950 rounded-3xl p-6 overflow-hidden border border-slate-800 transition-all duration-300 h-[280px] sm:h-[380px] flex flex-col justify-between ${
             isVibrating ? "vibrating-canvas border-red-500/50 shadow-lg shadow-red-500/10" : ""
           }`}
           id="simulator-canvas"

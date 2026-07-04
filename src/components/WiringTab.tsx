@@ -113,7 +113,7 @@ export default function WiringTab() {
       {viewMode === "steps" ? (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Step navigator left panel */}
-          <div className="lg:col-span-4 space-y-2">
+          <div className="hidden lg:block lg:col-span-4 space-y-2">
             <h3 className="font-semibold text-slate-700 text-xs uppercase tracking-wider mb-2">ขั้นตอนการต่อวงจร</h3>
             <div className="space-y-2">
               {WIRING_STEPS.map((step) => {
@@ -157,23 +157,49 @@ export default function WiringTab() {
           </div>
 
           {/* Active step workspace right panel */}
-          <div className="lg:col-span-8">
+          <div className="col-span-1 lg:col-span-8">
             {currentStepData && (
-              <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-col justify-between h-full min-h-[420px]" id="wiring-step-container">
+              <div className="bg-white p-5 sm:p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-col justify-between h-full min-h-[420px]" id="wiring-step-container">
                 <div>
+                  {/* Mobile Stepper Circles Header - High Polish Mobile UX */}
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 mb-4 border-b border-slate-100 lg:hidden gap-3">
+                    <span className="text-xs font-semibold text-slate-500 font-sans">ขั้นตอนประกอบวงจร:</span>
+                    <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 scrollbar-none">
+                      {WIRING_STEPS.map((s) => {
+                        const isStepActive = s.step === activeStep;
+                        const isStepCompleted = completedSteps[s.step] || false;
+                        return (
+                          <button
+                            key={s.step}
+                            onClick={() => setActiveStep(s.step)}
+                            className={`w-7.5 h-7.5 rounded-full flex items-center justify-center font-mono text-xs font-bold shrink-0 transition-all ${
+                              isStepActive
+                                ? "bg-indigo-600 text-white ring-4 ring-indigo-100"
+                                : isStepCompleted
+                                ? "bg-emerald-500 text-white"
+                                : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                            }`}
+                          >
+                            {s.step}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
                   <div className="flex items-center space-x-2 mb-3.5">
                     <span className="bg-indigo-50 text-indigo-700 text-xs font-semibold px-2.5 py-1 rounded-full">
                       ขั้นตอนที่ {currentStepData.step} จาก {WIRING_STEPS.length}
                     </span>
                     {completedSteps[currentStepData.step] && (
-                      <span className="bg-emerald-50 text-emerald-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
+                      <span className="bg-emerald-50 text-emerald-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center animate-fadeIn">
                         <Check className="w-3.5 h-3.5 mr-1" /> เชื่อมต่อแล้ว
                       </span>
                     )}
                   </div>
 
-                  <h3 className="font-semibold text-slate-800 text-xl mb-2">{currentStepData.title}</h3>
-                  <p className="text-slate-600 text-sm leading-relaxed mb-6">{currentStepData.description}</p>
+                  <h3 className="font-semibold text-slate-800 text-lg sm:text-xl mb-2">{currentStepData.title}</h3>
+                  <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-6">{currentStepData.description}</p>
 
                   {currentStepData.connections.length > 0 ? (
                     <div className="space-y-3">
@@ -216,21 +242,39 @@ export default function WiringTab() {
                   )}
                 </div>
 
-                <div className="mt-8 pt-5 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4">
-                  <div className="text-xs text-slate-400">
+                <div className="mt-8 pt-5 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4 w-full">
+                  <div className="text-xs text-slate-400 text-center md:text-left">
                     ตรวจสายให้ตรงช่อง และสีสายไฟเพื่อความเป็นระเบียบและหาง่าย
                   </div>
-                  <div className="flex space-x-3 w-full sm:w-auto">
+                  
+                  {/* Step Navigation Controls - High Polish UX */}
+                  <div className="flex flex-wrap items-center justify-center gap-2.5 w-full md:w-auto">
+                    <button
+                      disabled={activeStep === 1}
+                      onClick={() => setActiveStep((prev) => Math.max(1, prev - 1))}
+                      className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 bg-white hover:bg-slate-50 font-medium text-xs sm:text-sm disabled:opacity-40 disabled:hover:bg-white transition-all cursor-pointer"
+                    >
+                      ← ย้อนกลับ
+                    </button>
+
                     <button
                       onClick={() => toggleStepComplete(currentStepData.step)}
-                      className={`flex-1 sm:flex-initial flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl font-medium text-sm transition-all ${
+                      className={`flex items-center justify-center space-x-1.5 px-4.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
                         completedSteps[currentStepData.step]
                           ? "bg-slate-100 text-slate-700 border border-slate-200"
                           : "bg-indigo-600 text-white hover:bg-indigo-700 shadow-md shadow-indigo-100"
                       }`}
                     >
-                      <Check className="w-4 h-4" />
-                      <span>{completedSteps[currentStepData.step] ? "ทำเครื่องหมายย้อนกลับ" : "เชื่อมสายสำเร็จเรียบร้อย!"}</span>
+                      <Check className="w-3.5 h-3.5" />
+                      <span>{completedSteps[currentStepData.step] ? "เรียบร้อย" : "เสร็จสิ้นขั้นตอนนี้"}</span>
+                    </button>
+
+                    <button
+                      disabled={activeStep === WIRING_STEPS.length}
+                      onClick={() => setActiveStep((prev) => Math.min(WIRING_STEPS.length, prev + 1))}
+                      className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 bg-white hover:bg-slate-50 font-medium text-xs sm:text-sm disabled:opacity-40 disabled:hover:bg-white transition-all cursor-pointer"
+                    >
+                      ถัดไป →
                     </button>
                   </div>
                 </div>

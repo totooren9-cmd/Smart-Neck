@@ -183,34 +183,93 @@ export default function EquipmentTab() {
                 key={eq.id}
                 id={`eq-card-${eq.id}`}
                 onClick={() => setSelectedEq(eq)}
-                className={`p-4 rounded-2xl transition-all duration-200 cursor-pointer border flex items-center justify-between group ${
+                className={`p-4 rounded-2xl transition-all duration-300 cursor-pointer border flex flex-col items-stretch justify-between group ${
                   isSelected 
                     ? "bg-indigo-50/70 border-indigo-200 shadow-sm" 
                     : "bg-white border-slate-100 hover:border-slate-200 shadow-xs"
                 }`}
               >
-                <div className="flex items-center space-x-3.5">
-                  <button
-                    onClick={(e) => toggleCheck(eq.id, e)}
-                    className={`w-6 h-6 rounded-lg flex items-center justify-center transition-colors border ${
-                      isChecked 
-                        ? "bg-indigo-600 border-indigo-600 text-white" 
-                        : "bg-slate-50 border-slate-200 text-transparent group-hover:border-slate-300"
-                    }`}
-                  >
-                    <Check className="w-4 h-4 stroke-[3]" />
-                  </button>
-                  <div>
-                    <h4 className="font-medium text-slate-800 text-sm">{eq.thName}</h4>
-                    <span className="text-xs text-slate-400 font-mono block">{eq.name}</span>
+                <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center space-x-3.5">
+                    <button
+                      onClick={(e) => toggleCheck(eq.id, e)}
+                      className={`w-6 h-6 rounded-lg flex items-center justify-center transition-colors border ${
+                        isChecked 
+                          ? "bg-indigo-600 border-indigo-600 text-white" 
+                          : "bg-slate-50 border-slate-200 text-transparent group-hover:border-slate-300"
+                      }`}
+                    >
+                      <Check className="w-4 h-4 stroke-[3]" />
+                    </button>
+                    <div>
+                      <h4 className="font-semibold text-slate-800 text-sm">{eq.thName}</h4>
+                      <span className="text-xs text-slate-400 font-mono block">{eq.name}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <div className="p-2 rounded-xl bg-slate-50 group-hover:bg-slate-100 transition-colors">
+                      {getIconComponent(eq.icon)}
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <div className="p-2 rounded-xl bg-slate-50 group-hover:bg-slate-100 transition-colors">
-                    {getIconComponent(eq.icon)}
+                {/* Inline detailed view for mobile devices when selected */}
+                {isSelected && (
+                  <div 
+                    className="w-full mt-4 pt-4 border-t border-indigo-100/60 lg:hidden space-y-4 text-left animate-fadeIn" 
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div>
+                      <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-wider block mb-1">หน้าที่ในโครงงานนี้</span>
+                      <p className="text-slate-700 text-xs leading-relaxed bg-indigo-50/50 p-3 rounded-xl border border-indigo-100/40 font-sans">
+                        💡 <strong>บทบาท:</strong> {eq.roleInProject}
+                      </p>
+                    </div>
+
+                    <div>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">รายละเอียดและหลักการ</span>
+                      <p className="text-slate-600 text-xs leading-relaxed font-sans">{eq.thDescription}</p>
+                      {eq.description && (
+                        <p className="text-slate-400 text-[10px] italic font-mono mt-1">{eq.description}</p>
+                      )}
+                    </div>
+
+                    {eq.pins && eq.pins.length > 0 && (
+                      <div>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">การเชื่อมต่อพินหลัก (Pinout)</span>
+                        <div className="border border-slate-100 rounded-xl overflow-hidden text-[11px] bg-white shadow-xs">
+                          <div className="grid grid-cols-3 bg-slate-50 p-2 font-semibold text-slate-600 border-b border-slate-100">
+                            <div>ขาอุปกรณ์</div>
+                            <div className="col-span-2">ต่อไปยังขาไมโครฯ / บอร์ด</div>
+                          </div>
+                          <div className="divide-y divide-slate-100">
+                            {eq.pins.map((p, pIdx) => (
+                              <div key={pIdx} className="grid grid-cols-3 p-2 text-slate-600">
+                                <div className="font-mono font-bold text-indigo-600">{p.pin}</div>
+                                <div className="col-span-2 text-slate-500 font-sans">{p.function}</div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {eq.specs && eq.specs.length > 0 && (
+                      <div>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">คุณสมบัติเฉพาะตัว</span>
+                        <div className="grid grid-cols-1 gap-1.5">
+                          {eq.specs.map((spec, sIdx) => (
+                            <div key={sIdx} className="flex items-center space-x-1.5 bg-slate-50 p-2 rounded-lg border border-slate-100 text-[11px] text-slate-600">
+                              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0" />
+                              <span className="leading-tight font-sans">{spec}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </div>
+                )}
               </div>
             );
           })}
@@ -218,7 +277,7 @@ export default function EquipmentTab() {
       </div>
 
       {/* Inspect Detail Card */}
-      <div className="lg:col-span-7">
+      <div className="hidden lg:block lg:col-span-7">
         {selectedEq ? (
           <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-col h-full justify-between" id="eq-inspect-detail">
             <div>

@@ -146,7 +146,7 @@ export default function TroubleshootTab({ currentCode }: TroubleshootTabProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6" id="troubleshooting-assistant">
       {/* Messages Window Panel */}
-      <div className="lg:col-span-8 flex flex-col h-[550px] bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100">
+      <div className="lg:col-span-8 flex flex-col h-[420px] sm:h-[550px] bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100">
         <div className="px-5 py-3.5 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center space-x-2.5">
             <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg">
